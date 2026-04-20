@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
+import { sendPasswordResetEmail } from 'firebase/auth'
+import { auth } from '../services/firebase'
 
 export function Login() {
   const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errore, setErrore] = useState('')
+  const [resetInviato, setResetInviato] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -14,6 +17,20 @@ export function Login() {
       await login(email, password)
     } catch {
       setErrore('Email o password non validi')
+    }
+  }
+
+  const handleReset = async () => {
+    if (!email) {
+      setErrore('Inserisci la tua email per ricevere il link di reset')
+      return
+    }
+    try {
+      await sendPasswordResetEmail(auth, email)
+      setResetInviato(true)
+      setErrore('')
+    } catch {
+      setErrore('Email non trovata')
     }
   }
 
@@ -40,10 +57,19 @@ export function Login() {
           />
         </div>
         {errore && <p style={{ color: 'red' }}>{errore}</p>}
+        {resetInviato && <p style={{ color: 'green' }}>Email di reset inviata, controlla la casella di posta</p>}
         <button type="submit" style={{ width: '100%', padding: 10 }}>
           Accedi
         </button>
       </form>
+      <div style={{ textAlign: 'center', marginTop: 12 }}>
+        <button
+          onClick={handleReset}
+          style={{ background: 'none', border: 'none', color: '#4A90D9', cursor: 'pointer', fontSize: 14 }}
+        >
+          Password dimenticata?
+        </button>
+      </div>
     </div>
   )
 }
