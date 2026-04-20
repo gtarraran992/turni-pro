@@ -21,3 +21,8 @@ body {
 input, select, button {
   font-family: inherit;
 }
+
+#root {
+  width: 100%;
+  text-align: center;
+}

@@ -52,16 +52,18 @@ export function ModaleTurno({ giorno, mese, anno, turnoEsistente, ospedali, onSa
       />
 
       {/* Modale */}
-      <div style={{
-        position: 'fixed',
-        bottom: 0, left: 0, right: 0,
-        background: 'white',
-        borderRadius: '16px 16px 0 0',
-        padding: 24,
-        zIndex: 101,
-        maxWidth: 480,
-        margin: '0 auto'
-      }}>
+<div style={{
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  background: 'white',
+  borderRadius: 16,
+  padding: 24,
+  zIndex: 101,
+  width: '90%',
+  maxWidth: '25%',
+}}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <h3 style={{ margin: 0 }}>
             {giorno} {MESI[mese - 1]} {anno}
@@ -80,7 +82,7 @@ export function ModaleTurno({ giorno, mese, anno, turnoEsistente, ospedali, onSa
             style={{ display: 'block', width: '100%', padding: 8, marginTop: 4 }}
           >
             {ospedali.map((osp, i) => (
-              <option key={i} value={i}>{osp.nome} — {osp.tariffaOraria}€/h</option>
+              <option key={i} value={i}>{osp.nome}</option>
             ))}
           </select>
         </div>
