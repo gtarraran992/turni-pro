@@ -23,54 +23,70 @@ function MonthGrid({ days, monthDate, turniPerGiorno, mappaColori, onClickDay })
       display: 'grid',
       gridTemplateColumns: 'repeat(7, 1fr)',
       gridTemplateRows: `repeat(${days.length / 7}, 1fr)`,
-      gap: 4,
+      gap: 3,
       minHeight: 320,
       width: '100%',
       flexShrink: 0
     }}>
       {days.map(date => {
         const key = format(date, 'yyyy-MM-dd')
-        const turno = turniPerGiorno[key]
+        const turnoInfo = turniPerGiorno[key]
+        const turno = turnoInfo?.turno
+        const parte = turnoInfo?.parte
         const oggi = isSameDay(date, new Date())
         const stessoMese = isSameMonth(date, monthDate)
         const dayIndex = getDay(date)
-        const weekend = dayIndex === 0 || dayIndex === 6
-        const colore = turno ? mappaColori[turno.ospedale] : null
+
+        const notturno = turno?.notturno
+        const colore = turno ? (notturno ? '#22c55e' : mappaColori[turno.ospedale]) : null
         const sigla = turno ? siglaOspedale(turno.ospedale) : null
 
         return (
           <div
             key={key}
-            onClick={() => onClickDay(date, turno)}
+            onClick={() => onClickDay(date, parte === 'end' ? null : turno)}
             style={{
-              background: oggi ? '#eaf3ff' : weekend ? '#fafbfd' : stessoMese ? 'white' : '#f5f7fa',
-              border: oggi ? '2px solid #4A90D9' : '1px solid #e6e8eb',
+              position: 'relative',
+              overflow: 'visible',
+              background: oggi ? '#eff6ff' : stessoMese ? 'white' : '#f5f7fa',
+              border: oggi ? '2px solid #3b82f6' : '1px solid #e6e8eb',
               borderRadius: 10,
-              padding: 4,
+              padding: '5px 2px',
               cursor: 'pointer',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'flex-start',
-              minHeight: 52
+              minHeight: 52,
+              boxShadow: stessoMese && !oggi ? '0 1px 2px rgba(0,0,0,0.04)' : 'none'
             }}
           >
             <div style={{
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: oggi ? '700' : '500',
-              color: stessoMese ? '#333' : '#aaa'
+              color: oggi ? '#1d4ed8' : stessoMese ? '#333' : '#bbb'
             }}>
               {date.getDate()}
             </div>
-            {turno && (
+
+            {turno && parte !== 'end' && (
               <div style={{
+                position: notturno ? 'absolute' : 'static',
+                bottom: notturno ? 6 : 'auto',
+                left: notturno ? '50%' : 'auto',
+                right: notturno ? '-50%' : 'auto',
                 background: colore,
                 color: 'white',
-                borderRadius: 12,
-                fontSize: 14,
-                fontWeight: '400',
-                padding: '1px 12px',
-                marginTop: 4
+                borderRadius: 10,
+                fontSize: 12,
+                fontWeight: '700',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '3px 12px',
+                marginTop: notturno ? 0 : 5,
+                zIndex: 5,
+                pointerEvents: 'none'
               }}>
                 {sigla}
               </div>
@@ -98,16 +114,22 @@ export function Calendario({ turni, ospedali, onGiornoClick }) {
     mappaIndice[osp.nome] = i
   })
 
-  const turniPerGiorno = useMemo(() => {
-    const map = {}
-    turni.forEach(t => {
-      const data = t.data?.toDate?.()
-      if (!data) return
-      const key = format(data, 'yyyy-MM-dd')
-      map[key] = t
-    })
-    return map
-  }, [turni])
+const turniPerGiorno = useMemo(() => {
+  const map = {}
+  turni.forEach(t => {
+    const data = t.data?.toDate?.()
+    if (!data) return
+    const keyStart = format(data, 'yyyy-MM-dd')
+    map[keyStart] = { turno: t, parte: 'start' }
+
+    if (t.notturno) {
+      const giornoSuccessivo = addDays(data, 1)
+      const keyEnd = format(giornoSuccessivo, 'yyyy-MM-dd')
+      map[keyEnd] = { turno: t, parte: 'end' }
+    }
+  })
+  return map
+}, [turni])
 
   const meseCorrente = currentDate.getMonth() + 1
   const annoCorrente = currentDate.getFullYear()

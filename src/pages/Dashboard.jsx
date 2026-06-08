@@ -14,6 +14,8 @@ export function Dashboard() {
   const [giornoSelezionato, setGiornoSelezionato] = useState(null)
 
   const totaleAnno = turni.reduce((acc, t) => acc + (t.totale || 0), 0)
+  const residuo = (profilo?.massimale || 0) - totaleAnno
+  const percentuale = profilo?.massimale ? Math.min((totaleAnno / profilo.massimale) * 100, 100) : 0
 
   if (!profilo || loading) return <p style={{ padding: 16 }}>Caricamento...</p>
 
@@ -25,14 +27,37 @@ export function Dashboard() {
         onGiornoClick={setGiornoSelezionato}
       />
 
-      {/* Totale anno */}
-      <div style={{ textAlign: 'center', marginTop: 24, paddingTop: 20, borderTop: '1px solid #eee' }}>
-        <div style={{ fontSize: 13, color: '#888', marginBottom: 4 }}>Totale {anno}</div>
-        <div style={{ fontSize: 36, fontWeight: 'bold', color: '#222' }}>
-          {euro(totaleAnno)} €
+      {/* Card totale anno */}
+      <div style={{
+        marginTop: 20,
+        padding: '16px 20px',
+        background: '#f8fafc',
+        border: '1px solid #e6e8eb',
+        borderRadius: 14,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        <div>
+          <div style={{ fontSize: 12, color: '#888', marginBottom: 4 }}>Totale {anno}</div>
+          <div style={{ fontSize: 28, fontWeight: '700', color: '#1a1a1a', lineHeight: 1 }}>
+            {euro(totaleAnno)} €
+          </div>
         </div>
-        <div style={{ fontSize: 13, color: '#888', marginTop: 4 }}>
-          Residuo {euro(profilo.massimale - totaleAnno)} €
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontSize: 12, color: '#888', marginBottom: 4 }}>Residuo</div>
+          <div style={{ fontSize: 16, fontWeight: '600', color: '#1a1a1a', marginBottom: 8 }}>
+            {euro(residuo)} €
+          </div>
+          <div style={{ width: 80, height: 4, background: '#e6e8eb', borderRadius: 2 }}>
+            <div style={{
+              height: 4,
+              width: `${percentuale}%`,
+              background: percentuale > 85 ? '#ef4444' : '#3b82f6',
+              borderRadius: 2,
+              transition: 'width 0.3s ease'
+            }} />
+          </div>
         </div>
       </div>
 
