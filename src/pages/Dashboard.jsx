@@ -27,7 +27,6 @@ export function Dashboard() {
         onGiornoClick={setGiornoSelezionato}
       />
 
-      {/* Card totale anno */}
       <div style={{
         marginTop: 20,
         padding: '16px 20px',

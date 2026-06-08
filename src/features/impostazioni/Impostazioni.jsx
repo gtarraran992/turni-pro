@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react'
 import { useImpostazioni } from './useImpostazioni'
 import { coloreOspedale } from '../../utils/colori'
+import { eliminaAccount } from '../../services/utenteService'
 
 const ospedaleVuoto = { nome: '', tariffaOraria: '' }
 
-export function Impostazioni({ userId, onSalvato, onNavigaLegal }) {
+export function Impostazioni({ userId, user, onSalvato, onNavigaLegal, onNavigaTermini, onLogout }) {
   const { profilo, loading, salvando, salva } = useImpostazioni(userId)
   const [ospedali, setOspedali] = useState([{ ...ospedaleVuoto }])
   const [massimale, setMassimale] = useState('')
   const [errore, setErrore] = useState('')
+  const [mostraConferma, setMostraConferma] = useState(false)
+  const [eliminando, setEliminando] = useState(false)
 
   useEffect(() => {
     if (profilo) {
@@ -55,11 +58,21 @@ export function Impostazioni({ userId, onSalvato, onNavigaLegal }) {
     if (onSalvato) onSalvato()
   }
 
+  const handleEliminaAccount = async () => {
+    setEliminando(true)
+    try {
+      await eliminaAccount(userId, user)
+    } catch (e) {
+      setEliminando(false)
+      setMostraConferma(false)
+      setErrore('Errore durante l\'eliminazione. Riprova.')
+    }
+  }
+
   if (loading) return <p>Caricamento...</p>
 
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '20px 16px' }}>
-
       <h2 style={{ fontSize: 20, fontWeight: '700', color: '#1a1a1a', margin: '0 0 24px 0' }}>
         Impostazioni
       </h2>
@@ -102,12 +115,7 @@ export function Impostazioni({ userId, onSalvato, onNavigaLegal }) {
                   value={osp.nome}
                   onChange={e => aggiornaOspedale(i, 'nome', e.target.value)}
                   placeholder="Es. Treviso"
-                  style={{
-                    width: '100%', padding: '8px 10px',
-                    borderRadius: 8, border: '1px solid #e6e8eb',
-                    fontSize: 14, color: '#1a1a1a',
-                    boxSizing: 'border-box'
-                  }}
+                  style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #e6e8eb', fontSize: 14, color: '#1a1a1a', boxSizing: 'border-box' }}
                 />
               </div>
               <div>
@@ -117,12 +125,7 @@ export function Impostazioni({ userId, onSalvato, onNavigaLegal }) {
                   value={osp.tariffaOraria}
                   onChange={e => aggiornaOspedale(i, 'tariffaOraria', e.target.value)}
                   placeholder="Es. 80"
-                  style={{
-                    width: '100%', padding: '8px 10px',
-                    borderRadius: 8, border: '1px solid #e6e8eb',
-                    fontSize: 14, color: '#1a1a1a',
-                    boxSizing: 'border-box'
-                  }}
+                  style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #e6e8eb', fontSize: 14, color: '#1a1a1a', boxSizing: 'border-box' }}
                 />
               </div>
             </div>
@@ -132,12 +135,7 @@ export function Impostazioni({ userId, onSalvato, onNavigaLegal }) {
         {ospedali.length < 2 && (
           <button
             onClick={aggiungiOspedale}
-            style={{
-              width: '100%', padding: '10px',
-              background: 'white', border: '1.5px dashed #e6e8eb',
-              borderRadius: 12, cursor: 'pointer',
-              fontSize: 13, color: '#888', fontWeight: '500'
-            }}
+            style={{ width: '100%', padding: '10px', background: 'white', border: '1.5px dashed #e6e8eb', borderRadius: 12, cursor: 'pointer', fontSize: 13, color: '#888', fontWeight: '500' }}
           >
             + Aggiungi ospedale
           </button>
@@ -149,22 +147,14 @@ export function Impostazioni({ userId, onSalvato, onNavigaLegal }) {
         <div style={{ fontSize: 12, fontWeight: '600', color: '#888', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 12 }}>
           Massimale forfettario
         </div>
-        <div style={{
-          padding: 16, background: 'white',
-          border: '1px solid #e6e8eb', borderRadius: 12
-        }}>
+        <div style={{ padding: 16, background: 'white', border: '1px solid #e6e8eb', borderRadius: 12 }}>
           <label style={{ fontSize: 12, color: '#888', display: 'block', marginBottom: 4 }}>Massimale annuo (€)</label>
           <input
             type="number"
             value={massimale}
             onChange={e => setMassimale(e.target.value)}
             placeholder="Es. 85000"
-            style={{
-              width: '100%', padding: '8px 10px',
-              borderRadius: 8, border: '1px solid #e6e8eb',
-              fontSize: 14, color: '#1a1a1a',
-              boxSizing: 'border-box'
-            }}
+            style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #e6e8eb', fontSize: 14, color: '#1a1a1a', boxSizing: 'border-box' }}
           />
         </div>
       </div>
@@ -178,26 +168,106 @@ export function Impostazioni({ userId, onSalvato, onNavigaLegal }) {
       <button
         onClick={handleSalva}
         disabled={salvando}
-        style={{
-          width: '100%', padding: 12,
-          background: salvando ? '#93c5fd' : '#3b82f6',
-          color: 'white', border: 'none',
-          borderRadius: 12, cursor: salvando ? 'default' : 'pointer',
-          fontSize: 15, fontWeight: '600'
-        }}
+        style={{ width: '100%', padding: 12, background: salvando ? '#93c5fd' : '#3b82f6', color: 'white', border: 'none', borderRadius: 12, cursor: salvando ? 'default' : 'pointer', fontSize: 15, fontWeight: '600' }}
       >
         {salvando ? 'Salvataggio...' : 'Salva impostazioni'}
       </button>
 
-      <div style={{ textAlign: 'center', marginTop: 20 }}>
-  <button
-    onClick={onNavigaLegal}
-    style={{ background: 'none', border: 'none', color: '#aaa', fontSize: 12, cursor: 'pointer' }}
-  >
-    Privacy Policy
-  </button>
-</div>
+{/* Link legali */}
+      <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
+        <button
+          onClick={onNavigaLegal}
+          style={stileBtnSecondario}
+        >
+          Privacy Policy
+        </button>
+        <button
+          onClick={onNavigaTermini}
+          style={stileBtnSecondario}
+        >
+          Termini di Servizio
+        </button>
+      </div>
 
+      {/* Esci */}
+      <button
+        onClick={onLogout}
+        style={{ ...stileBtnSecondario, width: '100%', marginTop: 10 }}
+      >
+        Esci dall'account
+      </button>
+
+      {/* Elimina account */}
+      <button
+        onClick={() => setMostraConferma(true)}
+        style={{
+          width: '100%', padding: 14,
+          background: 'transparent',
+          border: '1.5px solid #ef4444',
+          borderRadius: 14, cursor: 'pointer',
+          fontSize: 15, fontWeight: '600',
+          color: '#ef4444', marginTop: 10
+        }}
+      >
+        Elimina account
+      </button>
+
+      {/* Modale conferma */}
+      {mostraConferma && (
+        <>
+          <div
+            onClick={() => !eliminando && setMostraConferma(false)}
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 100 }}
+          />
+          <div style={{
+            position: 'fixed',
+            top: '50%', left: '50%',
+            transform: 'translate(-50%, -50%)',
+            background: 'white',
+            borderRadius: 16,
+            padding: 24,
+            zIndex: 101,
+            width: '80%',
+            maxWidth: 400,
+          }}>
+            <h3 style={{ margin: '0 0 8px', fontSize: 17, color: '#1a1a1a' }}>Elimina account</h3>
+            <p style={{ fontSize: 14, color: '#6b7280', marginBottom: 20 }}>
+              Sei sicuro? Questa azione è irreversibile. Tutti i tuoi turni e dati verranno eliminati definitivamente.
+            </p>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button
+                onClick={() => setMostraConferma(false)}
+                disabled={eliminando}
+                style={{ flex: 1, padding: 10, background: '#f5f5f5', border: 'none', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: '500' }}
+              >
+                Annulla
+              </button>
+              <button
+                onClick={handleEliminaAccount}
+                disabled={eliminando}
+                style={{ flex: 1, padding: 10, background: '#ef4444', border: 'none', borderRadius: 10, cursor: eliminando ? 'default' : 'pointer', fontSize: 14, fontWeight: '600', color: 'white' }}
+              >
+                {eliminando ? 'Eliminazione...' : 'Elimina'}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    <div style={{ textAlign: 'center', marginTop: 24, fontSize: 12, color: '#ccc' }}>
+      Turni Pro v{__APP_VERSION__}
+    </div>
     </div>
   )
+}
+
+const stileBtnSecondario = {
+  flex: 1,
+  padding: '12px 8px',
+  background: 'white',
+  border: '1px solid #e6e8eb',
+  borderRadius: 14,
+  cursor: 'pointer',
+  fontSize: 13,
+  fontWeight: '500',
+  color: '#374151'
 }

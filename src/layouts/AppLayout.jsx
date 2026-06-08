@@ -3,22 +3,27 @@ import { Dashboard } from '../pages/Dashboard'
 import { Impostazioni } from '../features/impostazioni/Impostazioni'
 import { useAuth } from '../hooks/useAuth'
 import { Legal } from '../pages/Legal'
+import { Termini } from '../pages/Termini'
 
 export function AppLayout() {
   const [pagina, setPagina] = useState('dashboard')
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
 
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', paddingBottom: 72 }}>
       {pagina === 'dashboard' && <Dashboard />}
-      {pagina === 'impostazioni' && (
-        <Impostazioni
-          userId={user.uid}
-          onSalvato={() => setPagina('dashboard')}
-            onNavigaLegal={() => setPagina('legal')}
-        />
-      )}
+{pagina === 'impostazioni' && (
+  <Impostazioni
+    userId={user.uid}
+    user={user}
+    onSalvato={() => setPagina('dashboard')}
+    onNavigaLegal={() => setPagina('legal')}
+    onNavigaTermini={() => setPagina('termini')}
+    onLogout={logout}
+  />
+)}
       {pagina === 'legal' && <Legal onBack={() => setPagina('impostazioni')} />}
+      {pagina === 'termini' && <Termini onBack={() => setPagina('impostazioni')} />}
 
       <div style={{
         position: 'fixed',
