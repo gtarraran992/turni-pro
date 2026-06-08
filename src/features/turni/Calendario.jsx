@@ -38,7 +38,7 @@ function MonthGrid({ days, monthDate, turniPerGiorno, mappaColori, onClickDay })
         const dayIndex = getDay(date)
 
         const notturno = turno?.notturno
-        const colore = turno ? (notturno ? '#22c55e' : mappaColori[turno.ospedale]) : null
+        const colore = turno ? (notturno ? '#37C7AF' : mappaColori[turno.ospedale]) : null
         const sigla = turno ? siglaOspedale(turno.ospedale) : null
 
         return (
@@ -48,8 +48,8 @@ function MonthGrid({ days, monthDate, turniPerGiorno, mappaColori, onClickDay })
             style={{
               position: 'relative',
               overflow: 'visible',
-              background: oggi ? '#eff6ff' : stessoMese ? 'white' : '#f5f7fa',
-              border: oggi ? '2px solid #3b82f6' : '1px solid #e6e8eb',
+              background: oggi ? '#E8EEF5' : stessoMese ? 'white' : '#f5f7fa',
+              border: oggi ? '2px solid #1A4C96' : '1px solid #e6e8eb',
               borderRadius: 10,
               padding: '5px 2px',
               cursor: 'pointer',
@@ -64,7 +64,7 @@ function MonthGrid({ days, monthDate, turniPerGiorno, mappaColori, onClickDay })
             <div style={{
               fontSize: 13,
               fontWeight: oggi ? '700' : '500',
-              color: oggi ? '#1d4ed8' : stessoMese ? '#333' : '#bbb'
+              color: oggi ? '#0D3B7A' : stessoMese ? '#333' : '#bbb'
             }}>
               {date.getDate()}
             </div>

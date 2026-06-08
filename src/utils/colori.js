@@ -1,4 +1,4 @@
-const PALETTE = ['#4A90D9', '#E8943A', '#5BB85D', '#9B59B6']
+const PALETTE = ['#1A4C96', '#E8943A', '#0D3B7A', '#26B89D']
 
 export function coloreOspedale(index) {
   return PALETTE[index % PALETTE.length]

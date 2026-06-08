@@ -33,7 +33,7 @@ export function Termini({ onBack }) {
         <p>I presenti termini sono regolati dalla legge italiana.</p>
 
         <h3 style={stileH3}>8. Contatti</h3>
-        <p>Per domande: <a href="mailto:gtarraran992@gmail.com" style={{ color: '#3b82f6' }}>gtarraran992@gmail.com</a></p>
+        <p>Per domande: <a href="mailto:gtarraran992@gmail.com" style={{ color: '#1A4C96' }}>gtarraran992@gmail.com</a></p>
       </div>
     </div>
   )

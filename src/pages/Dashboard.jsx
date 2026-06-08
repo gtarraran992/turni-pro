@@ -52,7 +52,7 @@ export function Dashboard() {
             <div style={{
               height: 4,
               width: `${percentuale}%`,
-              background: percentuale > 85 ? '#ef4444' : '#3b82f6',
+              background: percentuale > 85 ? '#ef4444' : '#1A4C96',
               borderRadius: 2,
               transition: 'width 0.3s ease'
             }} />

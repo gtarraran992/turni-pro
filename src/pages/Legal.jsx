@@ -90,4 +90,4 @@ const stileData = {
   fontStyle: 'italic'
 }
 
-const stileLink = { color: '#3b82f6' }
+const stileLink = { color: '#1A4C96' }

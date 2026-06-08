@@ -104,7 +104,7 @@ export function ModaleTurno({ giorno, mese, anno, turnoEsistente, ospedali, onSa
               style={{
                 width: 44, height: 24,
                 borderRadius: 12,
-                background: notturno ? '#22c55e' : '#e6e8eb',
+                background: notturno ? '#37C7AF' : '#e6e8eb',
                 cursor: 'pointer',
                 position: 'relative',
                 transition: 'background 0.2s'
@@ -139,7 +139,7 @@ export function ModaleTurno({ giorno, mese, anno, turnoEsistente, ospedali, onSa
           <button
             onClick={handleSalva}
             disabled={salvando || !ore || Number(ore) <= 0}
-            style={{ width: '100%', padding: 10, borderRadius: 10, border: 'none', background: '#3b82f6', color: 'white', fontWeight: '600', cursor: 'pointer', fontSize: 14 }}
+            style={{ width: '100%', padding: 10, borderRadius: 10, border: 'none', background: '#1A4C96', color: 'white', fontWeight: '600', cursor: 'pointer', fontSize: 14 }}
           >
             {salvando ? 'Salvataggio...' : 'Aggiungi turno'}
           </button>

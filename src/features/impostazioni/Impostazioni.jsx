@@ -168,7 +168,7 @@ export function Impostazioni({ userId, user, onSalvato, onNavigaLegal, onNavigaT
       <button
         onClick={handleSalva}
         disabled={salvando}
-        style={{ width: '100%', padding: 12, background: salvando ? '#93c5fd' : '#3b82f6', color: 'white', border: 'none', borderRadius: 12, cursor: salvando ? 'default' : 'pointer', fontSize: 15, fontWeight: '600' }}
+        style={{ width: '100%', padding: 12, background: salvando ? '#93c5fd' : '#1A4C96', color: 'white', border: 'none', borderRadius: 12, cursor: salvando ? 'default' : 'pointer', fontSize: 15, fontWeight: '600' }}
       >
         {salvando ? 'Salvataggio...' : 'Salva impostazioni'}
       </button>

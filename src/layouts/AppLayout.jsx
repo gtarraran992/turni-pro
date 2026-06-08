@@ -63,7 +63,7 @@ function NavBtn({ label, icon, attivo, onClick }) {
         border: attivo ? '1px solid #bfdbfe' : '1px solid transparent',
         borderRadius: 14,
         cursor: 'pointer',
-        color: attivo ? '#3b82f6' : '#888',
+        color: attivo ? '#1A4C96' : '#888',
         fontSize: 12,
         fontWeight: attivo ? '600' : '400',
         display: 'flex',

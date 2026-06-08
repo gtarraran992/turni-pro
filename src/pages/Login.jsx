@@ -65,7 +65,7 @@ export function Login() {
       <div style={{ textAlign: 'center', marginTop: 12 }}>
         <button
           onClick={handleReset}
-          style={{ background: 'none', border: 'none', color: '#4A90D9', cursor: 'pointer', fontSize: 14 }}
+          style={{ background: 'none', border: 'none', color: '#1A4C96', cursor: 'pointer', fontSize: 14 }}
         >
           Password dimenticata?
         </button>
