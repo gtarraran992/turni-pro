@@ -1,5 +1,14 @@
 {
   "appId": "com.giacomo.turnipro",
   "appName": "Turni Pro",
-  "webDir": "dist"
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "backgroundColor": "#0D3B7A",
+      "androidSplashResourceName": "splash",
+      "showSpinner": false
+    }
+  }
 }
