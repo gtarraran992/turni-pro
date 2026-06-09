@@ -47,14 +47,15 @@ export function Impostazioni({ userId, user, onSalvato, onNavigaLegal, onNavigaT
       setErrore('Inserisci il massimale forfettario')
       return
     }
-    await salva({
-      ospedali: ospedali.map(o => ({
-        nome: o.nome.trim(),
-        tariffaOraria: Number(o.tariffaOraria)
-      })),
-      massimale: Number(massimale),
-      onboardingDone: true
-    })
+await salva({
+  ospedali: ospedali.map(o => ({
+    nome: o.nome.trim(),
+    tariffaOraria: Number(o.tariffaOraria),
+    budgetAnnuo: o.budgetAnnuo ? Number(o.budgetAnnuo) : null
+  })),
+  massimale: Number(massimale),
+  onboardingDone: true
+})
     if (onSalvato) onSalvato()
   }
 
@@ -107,28 +108,39 @@ export function Impostazioni({ userId, user, onSalvato, onNavigaLegal, onNavigaT
               )}
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-              <div>
-                <label style={{ fontSize: 12, color: '#888', display: 'block', marginBottom: 4 }}>Nome</label>
-                <input
-                  type="text"
-                  value={osp.nome}
-                  onChange={e => aggiornaOspedale(i, 'nome', e.target.value)}
-                  placeholder="Es. Treviso"
-                  style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #e6e8eb', fontSize: 14, color: '#1a1a1a', boxSizing: 'border-box' }}
-                />
-              </div>
-              <div>
-                <label style={{ fontSize: 12, color: '#888', display: 'block', marginBottom: 4 }}>Tariffa (€/h)</label>
-                <input
-                  type="number"
-                  value={osp.tariffaOraria}
-                  onChange={e => aggiornaOspedale(i, 'tariffaOraria', e.target.value)}
-                  placeholder="Es. 80"
-                  style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #e6e8eb', fontSize: 14, color: '#1a1a1a', boxSizing: 'border-box' }}
-                />
-              </div>
-            </div>
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+  <div>
+    <label style={{ fontSize: 12, color: '#888', display: 'block', marginBottom: 4 }}>Nome</label>
+    <input
+      type="text"
+      value={osp.nome}
+      onChange={e => aggiornaOspedale(i, 'nome', e.target.value)}
+      placeholder="Es. Treviso"
+      style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #e6e8eb', fontSize: 14, color: '#1a1a1a', boxSizing: 'border-box' }}
+    />
+  </div>
+  <div>
+    <label style={{ fontSize: 12, color: '#888', display: 'block', marginBottom: 4 }}>Tariffa (€/h)</label>
+    <input
+      type="number"
+      value={osp.tariffaOraria}
+      onChange={e => aggiornaOspedale(i, 'tariffaOraria', e.target.value)}
+      placeholder="Es. 80"
+      style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #e6e8eb', fontSize: 14, color: '#1a1a1a', boxSizing: 'border-box' }}
+    />
+  </div>
+</div>
+<div style={{ marginTop: 10 }}>
+  <label style={{ fontSize: 12, color: '#888', display: 'block', marginBottom: 4 }}>Budget annuo (€)</label>
+  <input
+    type="number"
+    value={osp.budgetAnnuo || ''}
+    onChange={e => aggiornaOspedale(i, 'budgetAnnuo', e.target.value)}
+    placeholder="Es. 20000"
+    style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #e6e8eb', fontSize: 14, color: '#1a1a1a', boxSizing: 'border-box' }}
+  />
+</div>
+
           </div>
         ))}
 

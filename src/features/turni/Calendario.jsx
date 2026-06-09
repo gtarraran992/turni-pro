@@ -234,26 +234,56 @@ const turniPerGiorno = useMemo(() => {
         </div>
       </div>
 
-      {/* Card ospedali */}
-      <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
-        {ospedali.map((osp, i) => (
-          <div key={i} style={{
-            flex: 1,
-            padding: 16,
-            borderRadius: 12,
-            background: coloreOspedale(i) + '18',
-            border: `1px solid ${coloreOspedale(i)}33`
-          }}>
-            <div style={{ fontWeight: '600', color: '#333', marginBottom: 2 }}>{osp.nome}</div>
-            <div style={{ fontSize: 12, color: '#888', marginBottom: 8 }}>
-              {labelFormattato}
+{/* Card ospedali */}
+<div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+  {ospedali.map((osp, i) => {
+    const totaleOspedaleAnno = turni
+      .filter(t => t.ospedale === osp.nome)
+      .reduce((acc, t) => acc + (t.totale || 0), 0)
+
+    const budget = osp.budgetAnnuo
+    const percentualeBudget = budget ? Math.min((totaleOspedaleAnno / budget) * 100, 100) : null
+    const coloreBarra = percentualeBudget >= 100 ? '#ef4444' : percentualeBudget >= 80 ? '#f97316' : '#37C7AF'
+
+    return (
+      <div key={i} style={{
+        flex: 1,
+        padding: 16,
+        borderRadius: 12,
+        background: coloreOspedale(i) + '18',
+        border: `1px solid ${coloreOspedale(i)}33`
+      }}>
+        <div style={{ fontWeight: '600', color: '#333', marginBottom: 2 }}>{osp.nome}</div>
+        <div style={{ fontSize: 12, color: '#888', marginBottom: 8 }}>
+          {labelFormattato}
+        </div>
+        <div style={{ fontSize: 20, fontWeight: 'normal', color: '#222', marginBottom: budget ? 10 : 0 }}>
+          {euro(totalePerOspedale[osp.nome])} €
+        </div>
+
+        {budget && (
+          <>
+            <div style={{ width: '100%', height: 4, background: '#e6e8eb', borderRadius: 2, marginBottom: 4 }}>
+              <div style={{
+                height: 4,
+                width: `${percentualeBudget}%`,
+                background: coloreBarra,
+                borderRadius: 2,
+                transition: 'width 0.3s ease'
+              }} />
             </div>
-            <div style={{ fontSize: 20, fontWeight: 'normal', color: '#222' }}>
-              {euro(totalePerOspedale[osp.nome])} €
+            <div style={{ fontSize: 11, color: percentualeBudget >= 100 ? '#ef4444' : '#888' }}>
+              {percentualeBudget >= 100
+                ? 'Budget superato'
+                : `${euro(budget - totaleOspedaleAnno)} € rimanenti`
+              }
             </div>
-          </div>
-        ))}
+          </>
+        )}
       </div>
+    )
+  })}
+</div>
 
       {/* Navigazione */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginTop: 20 }}>
